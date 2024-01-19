@@ -1,0 +1,5 @@
+package base.controller;
+
+public class AppController {
+
+}

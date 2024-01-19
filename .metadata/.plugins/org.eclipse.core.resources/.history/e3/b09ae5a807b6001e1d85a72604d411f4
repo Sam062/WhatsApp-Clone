@@ -1,0 +1,18 @@
+package base.Entiry;
+
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+public class Room {
+
+	private Integer roomId;
+	private String roomName;
+	private boolean active;
+
+}

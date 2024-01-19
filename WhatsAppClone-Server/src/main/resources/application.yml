@@ -1,0 +1,17 @@
+server:
+  port: 9695
+spring:
+  datasource:
+    username: admin #root
+    password: P@ssw0rd #root
+#    url: jdbc:mysql://localhost:3306/whatsapp_clone
+    url: jdbc:mysql://18.232.61.3:3306/whatsapp_clone
+  jpa:
+    properties:
+      hibernate:
+#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: false
+        hbm2ddl:
+          auto: update
+#          auto: create-drop
+        show_sql: false

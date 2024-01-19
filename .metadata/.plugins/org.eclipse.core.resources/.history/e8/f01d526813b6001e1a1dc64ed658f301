@@ -1,0 +1,61 @@
+package base.controller;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import base.Entiry.Room;
+import base.model.MessagesModel;
+import base.model.RoomModel;
+import base.repo.RoomRepo;
+
+@RestController
+@CrossOrigin(origins = "*")
+@RequestMapping("/whatsapp")
+public class WhatsAppController {
+
+	@Autowired
+	private RoomRepo roomRepo;
+
+//	@Autowired
+//	private MessagesRepo msgRepo;
+
+	@GetMapping("/rooms")
+	public ResponseEntity<List<RoomModel>> findAllRooms() {
+		return new ResponseEntity<>(roomRepo.findAll().stream().map(room -> {
+			RoomModel roomModel = new RoomModel();
+			BeanUtils.copyProperties(room, roomModel);
+
+			roomModel.setMessageList(room.getMessageList().stream().map(msg -> {
+				MessagesModel msgModel = new MessagesModel();
+				BeanUtils.copyProperties(msg, msgModel);
+				System.out.println("Msg Model: " + msgModel);
+				return msgModel;
+			}).collect(Collectors.toList()));
+
+			System.out.println("Room Model: " + roomModel);
+			return roomModel;
+		}).collect(Collectors.toList()), HttpStatus.OK);
+	}
+
+	@PostMapping("/createnewroom")
+	public ResponseEntity<String> createNewRoom(@RequestBody RoomModel room) {
+
+		Room roomEntity = new Room();
+		BeanUtils.copyProperties(room, roomEntity);
+
+		roomRepo.save(roomEntity);
+
+		return null;
+	}
+}

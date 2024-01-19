@@ -1,0 +1,45 @@
+package base.controller;
+
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RestController;
+
+import base.Entiry.Messages;
+import base.model.MessagesModel;
+import base.model.RoomModel;
+import base.repo.MessagesRepo;
+import base.repo.RoomRepo;
+import ch.qos.logback.core.joran.util.beans.BeanUtil;
+
+@RestController
+@CrossOrigin(origins = "*")
+public class WhatsAppController {
+
+	@Autowired
+	private RoomRepo roomRepo;
+
+	@Autowired
+	private MessagesRepo msgRepo;
+
+	public ResponseEntity<List<RoomModel>> findAllRooms() {
+		return new ResponseEntity<List<RoomModel>>(roomRepo.findAll().stream().map(room -> {
+			MessagesModel msgModel = new MessagesModel();
+			RoomModel roomModel = new RoomModel();
+			BeanUtils.copyProperties(room, roomModel);
+			roomModel.setMessageList(room.getMessageList().stream().map(msg -> {
+				BeanUtils.copyProperties(msg, msgModel);
+				return msgModel;
+			}).collect(Collectors.toSet()));
+			
+			return roomModel;
+		}).collect(Collectors.toList()), HttpStatus.OK)
+	}
+
+}

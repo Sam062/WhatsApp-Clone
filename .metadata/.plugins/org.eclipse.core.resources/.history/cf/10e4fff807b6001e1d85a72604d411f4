@@ -1,0 +1,20 @@
+package base.Entiry;
+
+import jakarta.persistence.Entity;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class Message {
+
+	private Integer msgId;
+	private String msg;
+
+	private String msgFrom;
+	private String timestamp;
+
+}
